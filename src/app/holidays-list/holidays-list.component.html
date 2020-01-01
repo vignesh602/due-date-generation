@@ -1,0 +1,63 @@
+<div class="holidays-section">
+  <span>Manage Weekly Off & Holidays</span>
+  <div class="gutter-example">
+    <div nz-row nzGutter="8">
+      <div nz-col class="gutter-row" nzSpan="3" *ngFor="let item of weekList" (click)="selectWeek(item)">
+          <div class="grid-config" [ngClass]="item.active ? 'active' : ''">{{item.name}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="table-section">
+    <div>Holidays</div>
+    <div class="table-view">
+      <nz-table [nzData]="holidaysList">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Holiday Name</th>
+            <th><a (click)="openModal()"><i nz-icon nzType="plus-circle" nzTheme="outline"></i> ADD</a> </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of holidaysList">
+            <td>{{ data.date | date:'dd MMM  (EEEE)' }}</td>
+            <td>{{ data.holidayName }}</td>
+            <td>
+              
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</div>
+
+<!-- ******* Modal ********* -->
+<nz-modal [(nzVisible)]="isModalVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()">
+  <ng-template #modalTitle>
+    Add Holiday
+  </ng-template>
+
+  <ng-template #modalContent>
+    <div nz-form [formGroup]="holidayForm">
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>Holiday Name</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+              <input nz-input formControlName="holidayName" placeholder="Enter a holiday name" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired>Date</nz-form-label>
+              <nz-form-control [nzSpan]="12">
+                  <nz-date-picker formControlName="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+    <button nz-button nzType="primary" (click)="addHoliday()">ADD</button>
+  </ng-template>
+</nz-modal>

@@ -1,0 +1,24 @@
+.grid-config {
+  background: gray;
+  height: 69px;
+  line-height: 77px;
+  font-size: 15px;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer
+}
+
+.active {
+  background: blue;
+}
+
+.gutter-example {
+  padding-top: 35px;
+}
+
+.table-section {
+  padding-top: 50px;
+  .table-view {
+    padding-top: 10px
+  }
+}

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Service } from './service/service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'due-date-generation';
+
+  constructor(
+    public service: Service
+  ) {
+    this.service.selectedWeeklyOff = {};
+    console.log('hi');
+  }
 }
