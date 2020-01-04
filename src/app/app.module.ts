@@ -15,6 +15,7 @@ import { HolidaysListComponent } from './holidays-list/holidays-list.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Service } from './service/service';
 import { GenerateDueDateComponent } from './generate-due-date/generate-due-date.component';
+import { WeeklyComponent } from './generate-due-date/weekly/weekly.component';
 registerLocaleData(en);
 
 @NgModule({
@@ -22,7 +23,8 @@ registerLocaleData(en);
     AppComponent,
     HolidaysListComponent,
     DashboardComponent,
-    GenerateDueDateComponent
+    GenerateDueDateComponent,
+    WeeklyComponent
   ],
   imports: [
     BrowserModule,

@@ -29,7 +29,7 @@
                     <nz-form-item class="radio-end-date-form">
                       <nz-form-label>ENDS AFTER</nz-form-label>
                       <nz-form-control>
-                        <nz-date-picker formControlName="endAfter"></nz-date-picker>
+                          <nz-input-number formControlName="endAfter" [nzMin]="1" [nzMax]="100000" [nzStep]="1"></nz-input-number> Occurances
                       </nz-form-control>
                     </nz-form-item>
                   </label>
@@ -54,7 +54,7 @@
       </div>
     </div>
     <div *ngIf="title=== 'WEEKLY'">
-      I
+        <app-weekly [weeklyForm]="weeklyForm"></app-weekly>
     </div>
   </nz-tab>
 </nz-tabset>

@@ -31,14 +31,12 @@ export class HolidaysListComponent implements OnInit {
 
   ngOnInit() {
     this.weekList.forEach((element: any) => {
-      if (element.name === 'SATURDAY' || element.name === 'SUNDAY') {
-        this.service.selectedWeeklyOff[element.name] = true;
+      if (this.service.selectedWeeklyOff[element.name]) {
         element.active = true;
       }
     });
     this.service.holidaysList.subscribe((res: any) => {
       this.holidaysList = res;
-      console.log(res)
     });
     this.initHolidayForm();
   }

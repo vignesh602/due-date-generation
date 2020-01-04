@@ -8,7 +8,7 @@ import { GenerateDueDateComponent } from './generate-due-date/generate-due-date.
 const routes: Routes = [
   // { path: '', component: DashboardComponent },
   { path: 'holidays', component: HolidaysListComponent },
-  { path: 'due-date-generationn', component: GenerateDueDateComponent }
+  { path: 'due-date-generation', component: GenerateDueDateComponent }
 ];
 
 @NgModule({

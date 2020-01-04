@@ -13,6 +13,7 @@ export class AppComponent {
     public service: Service
   ) {
     this.service.selectedWeeklyOff = {};
-    console.log('hi');
+    this.service.selectedWeeklyOff['SATURDAY'] = true;
+    this.service.selectedWeeklyOff['SUNDAY'] = true;
   }
 }
