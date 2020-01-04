@@ -40,7 +40,24 @@
   </ng-template>
 
   <ng-template #modalContent>
-    <div nz-form [formGroup]="holidayForm">
+      <!-- <div nz-row nzGutter="16" nz-form [formGroup]="holidayForm" [nzLayout]="'vertical'">
+          <div nz-col class="gutter-row" nzSpan="12">
+              <div class="gutter-box">
+                  <nz-form-item>
+                      <nz-form-label class="fields-modal-input" [nzSpan]="24" nzRequired nzFor="name">Holiday Name
+                      </nz-form-label>
+                      <nz-form-control [nzSpan]="24">
+                          <input nz-input formControlName="holidayName" placeholder="Enter a holiday name" />
+                          <nz-form-explain *ngIf="iMapForm.get('name').dirty && iMapForm.get('name').errors">This
+                              field is
+                              required
+                          </nz-form-explain>
+                      </nz-form-control>
+                  </nz-form-item>
+              </div>
+          </div>
+      </div> -->
+    <div nz-form [formGroup]="holidayForm" [nzLayout]="'vertical'">
         <nz-form-item>
             <nz-form-label [nzSpan]="7" nzRequired>Holiday Name</nz-form-label>
             <nz-form-control [nzSpan]="12">

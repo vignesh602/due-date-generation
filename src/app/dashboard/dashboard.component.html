@@ -2,6 +2,10 @@
   <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
     <div class="logo"></div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-menu-item routerLink="/due-date-generationn">
+        <i nz-icon nzType="file"></i>
+        <span>Due Date Generation</span>
+      </li>
       <li nz-menu-item routerLink="/holidays">
         <i nz-icon nzType="file"></i>
         <span>Holidays & Weekly off</span>
@@ -10,12 +14,8 @@
   </nz-sider>
   <nz-layout>
     <nz-header class="header-section">
-      <i
-        class="trigger"
-        nz-icon
-        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-        (click)="isCollapsed = !isCollapsed"
-      ></i>
+      <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="isCollapsed = !isCollapsed"></i>
       <div class="heading">Due Date Generation</div>
     </nz-header>
     <nz-content style="padding-top: 25px">

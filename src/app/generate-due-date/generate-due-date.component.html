@@ -1,0 +1,60 @@
+<nz-tabset [nzAnimated]="'false'">
+  <nz-tab *ngFor="let title of frequency" [nzTitle]="title">
+    <div *ngIf="title=== 'DAILY'">
+      <div nz-form [formGroup]="dailyForm" class="form-section" [nzLayout]="'vertical'">
+        <div class="gutter-example">
+          <div nz-row nzGutter="16">
+            <nz-form-item>
+              <nz-form-label>Start Date</nz-form-label>
+              <nz-form-control>
+                <nz-date-picker formControlName="startDate"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-row nzGutter="16" class="end-date-section">
+            <nz-radio-group formControlName="endDateType">
+              <div nz-row nzGutter="16">
+                <div nz-col class="gutter-row" nzSpan="6">
+                  <label nz-radio nzValue="endDate">
+                    <nz-form-item class="radio-end-date-form">
+                      <nz-form-label>ENDS BY</nz-form-label>
+                      <nz-form-control>
+                        <nz-date-picker formControlName="endDate"></nz-date-picker>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </label>
+                </div>
+                <div nz-col class="gutter-row" nzSpan="6">
+                  <label nz-radio nzValue="occurence">
+                    <nz-form-item class="radio-end-date-form">
+                      <nz-form-label>ENDS AFTER</nz-form-label>
+                      <nz-form-control>
+                        <nz-date-picker formControlName="endAfter"></nz-date-picker>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </label>
+                </div>
+                <div nz-col class="gutter-row" nzSpan="6">
+                  <label nz-radio nzValue="onGoing">
+                    <nz-form-item class="radio-end-date-form">
+                      <nz-form-label>ONGOING</nz-form-label>
+                      <nz-form-control>
+                        <nz-alert nzType="success" nzMessage="This responsibility will perpetually exits"></nz-alert>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </label>
+                </div>
+              </div>
+            </nz-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="button-section">
+          <button nz-button nzType="primary" (click)="submitForm()">Next</button>
+      </div>
+    </div>
+    <div *ngIf="title=== 'WEEKLY'">
+      I
+    </div>
+  </nz-tab>
+</nz-tabset>

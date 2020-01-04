@@ -14,13 +14,15 @@ import en from '@angular/common/locales/en';
 import { HolidaysListComponent } from './holidays-list/holidays-list.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Service } from './service/service';
+import { GenerateDueDateComponent } from './generate-due-date/generate-due-date.component';
 registerLocaleData(en);
 
 @NgModule({
   declarations: [
     AppComponent,
     HolidaysListComponent,
-    DashboardComponent
+    DashboardComponent,
+    GenerateDueDateComponent
   ],
   imports: [
     BrowserModule,
