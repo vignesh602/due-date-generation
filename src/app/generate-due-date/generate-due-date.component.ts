@@ -39,7 +39,16 @@ export class GenerateDueDateComponent implements OnInit {
     });
     this.weeklyForm = this.fb.group({
       week: [null],
-      startDate: [null],
+      startDate: [this.currentDate],
+      endDateType: [null],
+      endDate: [null],
+      endAfter: [null],
+      onGoing: [null]
+    });
+    this.monthlyForm = this.fb.group({
+      month: [null],
+      day: [null],
+      startDate: [this.currentDate],
       endDateType: [null],
       endDate: [null],
       endAfter: [null],

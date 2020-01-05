@@ -56,5 +56,8 @@
     <div *ngIf="title=== 'WEEKLY'">
         <app-weekly [weeklyForm]="weeklyForm"></app-weekly>
     </div>
+    <div *ngIf="title=== 'MONTHLY'">
+      <app-monthly [monthlyForm]="monthlyForm"></app-monthly>
+  </div>
   </nz-tab>
 </nz-tabset>

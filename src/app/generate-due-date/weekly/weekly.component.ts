@@ -43,8 +43,8 @@ export class WeeklyComponent implements OnInit {
       dueDates = this.generateDueDates(startDate, endDate, holidayList, formValue.week);
     } else if (formValue.endDateType === 'occurence') {
       let endAfter = formValue.endAfter;
-      let endDate = _.cloneDeep(startDate);
-      endDate.setDate(endDate.getDate() + endAfter);
+      // let endDate = _.cloneDeep(startDate);
+      // endDate.setDate(endDate.getDate() + endAfter);
       dueDates = this.generateByOccurence(startDate, endAfter, holidayList, formValue.week)
       // dueDates = this.generateDueDates(startDate, endDate, holidayList, formValue.week);
     } else {
