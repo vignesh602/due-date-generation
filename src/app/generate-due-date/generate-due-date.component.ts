@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Service } from '../service/service';
 import { getDay } from '../utils/staticData_and_functions';
 import * as _ from 'lodash';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-generate-due-date',
@@ -28,7 +29,8 @@ export class GenerateDueDateComponent implements OnInit {
 
   constructor(
     public service: Service,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    public msg: NzMessageService
   ) { }
 
   ngOnInit() {
@@ -38,8 +40,8 @@ export class GenerateDueDateComponent implements OnInit {
 
   createForms() {
     this.dailyForm = this.fb.group({
-      startDate: [null],
-      endDateType: [null],
+      startDate: [null, Validators.required],
+      endDateType: [null, Validators.required],
       endDate: [null],
       endAfter: [null],
       onGoing: [null]
@@ -76,7 +78,6 @@ export class GenerateDueDateComponent implements OnInit {
   }
 
   submitForm() {
-    this.dueDatesDisplay = [];
     let formValue = _.cloneDeep(this.dailyForm.value);
     let dueDates = [];
     let startDate: Date = formValue.startDate;
@@ -84,42 +85,16 @@ export class GenerateDueDateComponent implements OnInit {
     this.service.holidaysList.subscribe((res) => holidayList = res).unsubscribe();
     if (formValue.endDateType === 'endDate') {
       let endDate: Date = formValue.endDate;
-      dueDates = this.generateDueDates(startDate, endDate, holidayList);
+      dueDates = this.service.generateDueDatesDaily(startDate, endDate, holidayList);
     } else if (formValue.endDateType === 'occurence') {
       let endAfter = formValue.endAfter;
       let endDate = _.cloneDeep(startDate);
       endDate.setDate(endDate.getDate() + endAfter);
-      dueDates = this.generateByOccurence(startDate, endAfter, holidayList);
-    } else {
-
+      dueDates = this.service.generateByOccurenceDaily(startDate, endAfter, holidayList);
+    } else if (formValue.endDateType === 'onGoing'){
+      dueDates = this.service.generateByOccurenceDaily(startDate, 200, holidayList);
     }
     this.outputdueDates(dueDates, 'daily')
-  }
-
-  generateDueDates(startDate: Date, endDate: Date, holidayList) {
-    let dueDates = [];
-    for (let sd = startDate; sd <= endDate; sd.setDate(sd.getDate() + 1)) {
-      if (!this.service.selectedWeeklyOff[getDay(sd.getDay())] &&
-        (holidayList.findIndex((value) => value.date.getDate() === sd.getDate() && value.date.getMonth() === sd.getMonth())) < 0) {
-        dueDates.push(new Date(sd));
-      }
-    }
-    return dueDates;
-  }
-
-  generateByOccurence(startDate: Date, occurence, holidayList) {
-    let count = 1;
-    let sd = startDate;
-    let dueDates = [];
-    while (count <= occurence) {
-      if (!this.service.selectedWeeklyOff[getDay(sd.getDay())] &&
-        (holidayList.findIndex((value) => value.date.getDate() === sd.getDate() && value.date.getMonth() === sd.getMonth())) < 0) {
-        count++;
-        dueDates.push(new Date(sd));
-      }
-      sd.setDate(sd.getDate() + 1);
-    }
-    return dueDates;
   }
 
   submitOneTimeForm() {
@@ -134,7 +109,6 @@ export class GenerateDueDateComponent implements OnInit {
   }
 
   outputdueDates(data, type?) {
-    console.log(data);
     switch (type) {
       case 'daily':
         this.selectedFormData = this.dailyForm.value;
@@ -143,10 +117,9 @@ export class GenerateDueDateComponent implements OnInit {
       case 'weekly':
         this.selectedFormData = _.cloneDeep(this.weeklyForm.value);
         this.selectedFormData.frequency = 'WEEKLY';
-        console.log(this.selectedFormData)
         this.selectedFormData.statement = `Every `
         this.selectedFormData.week.forEach((el: any) => {
-          if(el.checked) {
+          if (el.checked) {
             this.selectedFormData.statement = this.selectedFormData.statement + el.value + ' ';
           }
         })
@@ -156,7 +129,7 @@ export class GenerateDueDateComponent implements OnInit {
         this.selectedFormData.frequency = 'MONTHLY'
         this.selectedFormData.statement = `${this.selectedFormData.day} of `
         this.selectedFormData.month.forEach((el: any) => {
-          if(el.checked) {
+          if (el.checked) {
             this.selectedFormData.statement = this.selectedFormData.statement + el.value + ' ';
           }
         })
@@ -176,9 +149,7 @@ export class GenerateDueDateComponent implements OnInit {
   }
 
   tabChange(tabInfo) {
-    console.log(tabInfo);
     this.tabIndex = tabInfo.index;
-    console.log(this.tabIndex)
   }
 
   openHolidaysModal() {

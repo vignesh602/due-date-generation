@@ -13,7 +13,7 @@ export class MonthlyComponent implements OnInit {
 
   @Input() monthlyForm: FormGroup;
   @Output() outputdueDates: EventEmitter<any> = new EventEmitter<any>();
-  
+
   monthData = monthData;
 
   constructor(
@@ -32,47 +32,16 @@ export class MonthlyComponent implements OnInit {
     this.service.holidaysList.subscribe((res) => holidayList = res).unsubscribe();
     if (formValue.endDateType === 'endDate') {
       let endDate: Date = formValue.endDate;
-      dueDates = this.generateDueDates(startDate, endDate, holidayList, formValue.month, formValue.day);
+      dueDates = this.service.generateDueDatesMonthly(startDate, endDate, holidayList, formValue.month, formValue.day);
     } else if (formValue.endDateType === 'occurence') {
       let endAfter = formValue.endAfter;
       let endDate = _.cloneDeep(startDate);
       endDate.setDate(endDate.getDate() + endAfter);
-      dueDates = this.generateByOccurence(startDate, endAfter, holidayList, formValue.month, formValue.day)
-    } else {
-
+      dueDates = this.service.generateByOccurenceMonthly(startDate, endAfter, holidayList, formValue.month, formValue.day)
+    } else if (formValue.endDateType === 'onGoing') {
+      dueDates = this.service.generateByOccurenceMonthly(startDate, 200, holidayList, formValue.month, formValue.day)
     }
     this.outputdueDates.emit(dueDates);
-  }
-
-  generateDueDates(startDate: Date, endDate: Date, holidayList, month, day) {
-    let dueDates = [];
-    let requiredDate = new Date(startDate.getFullYear(), startDate.getMonth(), day);
-    if (requiredDate < startDate) requiredDate.setMonth(requiredDate.getMonth() + 1);
-    for (let sd = requiredDate; sd <= endDate; sd.setMonth(sd.getMonth() + 1)) {
-      if (!this.service.selectedWeeklyOff[getDay(sd.getDay())] &&
-        (month.findIndex((item) => item.checked === true && item.value === getMonth(sd.getMonth())) !== -1) &&
-        (holidayList.findIndex((value) => value.date.getDate() === sd.getDate() && value.date.getMonth() === sd.getMonth())) < 0) {
-        dueDates.push(new Date(sd));
-      }
-    }
-    return dueDates;
-  }
-
-  generateByOccurence(startDate: Date, occurence, holidayList, month, day) {
-    let count = 1;
-    let sd = new Date(startDate.getFullYear(), startDate.getMonth(), day);
-    let dueDates = [];
-    if (sd < startDate) sd.setMonth(sd.getMonth() + 1);
-    while (count <= occurence) {
-      if (!this.service.selectedWeeklyOff[getDay(sd.getDay())] &&
-        (month.findIndex((item) => item.checked === true && item.value === getMonth(sd.getMonth())) !== -1) &&
-        (holidayList.findIndex((value) => value.date.getDate() === sd.getDate() && value.date.getMonth() === sd.getMonth())) < 0) {
-        count++;
-        dueDates.push(new Date(sd));
-      }
-      sd.setMonth(sd.getMonth() + 1);
-    }
-    return dueDates;
   }
 
 }

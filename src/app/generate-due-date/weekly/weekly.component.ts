@@ -31,45 +31,13 @@ export class WeeklyComponent implements OnInit {
     this.service.holidaysList.subscribe((res) => holidayList = res).unsubscribe();
     if (formValue.endDateType === 'endDate') {
       let endDate: Date = formValue.endDate;
-      dueDates = this.generateDueDates(startDate, endDate, holidayList, formValue.week);
+      dueDates = this.service.generateDueDatesWeekly(startDate, endDate, holidayList, formValue.week);
     } else if (formValue.endDateType === 'occurence') {
       let endAfter = formValue.endAfter;
-      // let endDate = _.cloneDeep(startDate);
-      // endDate.setDate(endDate.getDate() + endAfter);
-      dueDates = this.generateByOccurence(startDate, endAfter, holidayList, formValue.week)
-      // dueDates = this.generateDueDates(startDate, endDate, holidayList, formValue.week);
-    } else {
-
+      dueDates = this.service.generateByOccurenceWeekly(startDate, endAfter, holidayList, formValue.week)
+    } else if (formValue.endDateType === 'onGoing'){
+      dueDates = this.service.generateByOccurenceWeekly(startDate, 200, holidayList, formValue.week)
     }
     this.outputdueDates.emit(dueDates);
   }
-
-  generateDueDates(startDate: Date, endDate: Date, holidayList, week) {
-    let dueDates = [];
-    for (let sd = startDate; sd <= endDate; sd.setDate(sd.getDate() + 1)) {
-      if (!this.service.selectedWeeklyOff[getDay(sd.getDay())] &&
-        (week.findIndex((item) => item.checked === true && item.value.toUpperCase() === getDay(sd.getDay())) !== -1) &&
-        (holidayList.findIndex((value) => value.date.getDate() === sd.getDate() && value.date.getMonth() === sd.getMonth())) < 0) {
-        dueDates.push(new Date(sd));
-      }
-    }
-    return dueDates;
-  }
-
-  generateByOccurence(startDate: Date, occurence, holidayList, week) {
-    let count = 1;
-    let sd = startDate;
-    let dueDates = [];
-    while (count <= occurence) {
-      if (!this.service.selectedWeeklyOff[getDay(sd.getDay())] &&
-        (week.findIndex((item) => item.checked === true && item.value.toUpperCase() === getDay(sd.getDay())) !== -1) &&
-        (holidayList.findIndex((value) => value.date.getDate() === sd.getDate() && value.date.getMonth() === sd.getMonth())) < 0) {
-        count++;
-        dueDates.push(new Date(sd));
-      }
-      sd.setDate(sd.getDate() + 1);
-    }
-    return dueDates;
-  }
-
 }
