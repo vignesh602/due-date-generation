@@ -1,63 +1,142 @@
-<nz-tabset [nzAnimated]="'false'">
-  <nz-tab *ngFor="let title of frequency" [nzTitle]="title">
-    <div *ngIf="title=== 'DAILY'">
-      <div nz-form [formGroup]="dailyForm" class="form-section" [nzLayout]="'vertical'">
-        <div class="gutter-example">
-          <div nz-row nzGutter="16">
-            <nz-form-item>
-              <nz-form-label>Start Date</nz-form-label>
-              <nz-form-control>
-                <nz-date-picker formControlName="startDate"></nz-date-picker>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-          <div nz-row nzGutter="16" class="end-date-section">
-            <nz-radio-group formControlName="endDateType">
-              <div nz-row nzGutter="16">
-                <div nz-col class="gutter-row" nzSpan="6">
-                  <label nz-radio nzValue="endDate">
-                    <nz-form-item class="radio-end-date-form">
-                      <nz-form-label>ENDS BY</nz-form-label>
-                      <nz-form-control>
-                        <nz-date-picker formControlName="endDate"></nz-date-picker>
-                      </nz-form-control>
-                    </nz-form-item>
-                  </label>
+<div class="calendar-section">
+  <div (click)="openHolidaysModal()" title="Holidays list"><i nz-icon nzType="calendar" nzTheme="outline"></i></div>
+</div>
+<div class="first-page" *ngIf="!isDisplayDates; else displayDueDatesTemp">
+  <nz-tabset [nzAnimated]="'false'" (nzSelectChange)="tabChange($event)" [nzSelectedIndex]="tabIndex">
+    <nz-tab *ngFor="let title of frequency" [nzTitle]="title">
+      <div *ngIf="title=== 'DAILY'">
+        <div nz-form [formGroup]="dailyForm" class="form-section" [nzLayout]="'vertical'">
+          <div class="gutter-example">
+            <div nz-row nzGutter="16">
+              <nz-form-item>
+                <nz-form-label>Start Date</nz-form-label>
+                <nz-form-control>
+                  <nz-date-picker formControlName="startDate"></nz-date-picker>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-row nzGutter="16" class="end-date-section">
+              <nz-radio-group formControlName="endDateType">
+                <div nz-row nzGutter="16">
+                  <div nz-col class="gutter-row" nzSpan="6">
+                    <label nz-radio nzValue="endDate">
+                      <nz-form-item class="radio-end-date-form">
+                        <nz-form-label>ENDS BY</nz-form-label>
+                        <nz-form-control>
+                          <nz-date-picker formControlName="endDate"></nz-date-picker>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </label>
+                  </div>
+                  <div nz-col class="gutter-row" nzSpan="6">
+                    <label nz-radio nzValue="occurence">
+                      <nz-form-item class="radio-end-date-form">
+                        <nz-form-label>ENDS AFTER</nz-form-label>
+                        <nz-form-control>
+                          <nz-input-number formControlName="endAfter" [nzMin]="1" [nzMax]="100000" [nzStep]="1">
+                          </nz-input-number> Occurances
+                        </nz-form-control>
+                      </nz-form-item>
+                    </label>
+                  </div>
+                  <div nz-col class="gutter-row" nzSpan="6">
+                    <label nz-radio nzValue="onGoing">
+                      <nz-form-item class="radio-end-date-form">
+                        <nz-form-label>ONGOING</nz-form-label>
+                        <nz-form-control>
+                          <nz-alert nzType="success" nzMessage="This responsibility will perpetually exits"></nz-alert>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </label>
+                  </div>
                 </div>
-                <div nz-col class="gutter-row" nzSpan="6">
-                  <label nz-radio nzValue="occurence">
-                    <nz-form-item class="radio-end-date-form">
-                      <nz-form-label>ENDS AFTER</nz-form-label>
-                      <nz-form-control>
-                          <nz-input-number formControlName="endAfter" [nzMin]="1" [nzMax]="100000" [nzStep]="1"></nz-input-number> Occurances
-                      </nz-form-control>
-                    </nz-form-item>
-                  </label>
-                </div>
-                <div nz-col class="gutter-row" nzSpan="6">
-                  <label nz-radio nzValue="onGoing">
-                    <nz-form-item class="radio-end-date-form">
-                      <nz-form-label>ONGOING</nz-form-label>
-                      <nz-form-control>
-                        <nz-alert nzType="success" nzMessage="This responsibility will perpetually exits"></nz-alert>
-                      </nz-form-control>
-                    </nz-form-item>
-                  </label>
-                </div>
-              </div>
-            </nz-radio-group>
+              </nz-radio-group>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="button-section">
+        <div class="button-section">
           <button nz-button nzType="primary" (click)="submitForm()">Next</button>
+        </div>
       </div>
+      <div *ngIf="title=== 'WEEKLY'">
+        <app-weekly [weeklyForm]="weeklyForm" (outputdueDates)="outputdueDates($event, 'weekly')"></app-weekly>
+      </div>
+      <div *ngIf="title=== 'MONTHLY'">
+        <app-monthly [monthlyForm]="monthlyForm" (outputdueDates)="outputdueDates($event, 'monthly')"></app-monthly>
+      </div>
+      <div *ngIf="title=== 'YEARLY'">
+        <app-yearly [yearlyForm]="yearlyForm" (outputdueDates)="outputdueDates($event, 'yearly')"></app-yearly>
+      </div>
+      <div *ngIf="title=== 'ONE TIME'">
+        <div nz-form [formGroup]="oneTimeForm" class="form-section" [nzLayout]="'vertical'">
+          <div class="gutter-example">
+            <div nz-row nzGutter="16">
+              <nz-form-item>
+                <nz-form-label>Start Date</nz-form-label>
+                <nz-form-control>
+                  <nz-date-picker formControlName="startDate"></nz-date-picker>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </div>
+        <div class="button-section">
+          <button nz-button nzType="primary" (click)="submitOneTimeForm()">Next</button>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</div>
+
+<!-- ******* Display Due Dates ******** -->
+<ng-template #displayDueDatesTemp>
+  <div class="second-page">
+    <button nz-button nzType="primary" (click)="goBack()"><i nz-icon nzType="left"></i>Back</button>
+    <div class="gutter-example heading">
+      <div nz-row nzGutter="16">
+        <b>Frequency</b> : {{selectedFormData.frequency}}
+      </div>
+      <div nz-row nzGutter="16" *ngIf="selectedFormData.day">
+        <b>Day</b> : {{selectedFormData.statement}}
+      </div>
+      <div nz-row nzGutter="16">
+        <b>Start Date</b> : {{selectedFormData.startDate | date}}
+      </div>
+      <div nz-row nzGutter="16">
+          <b>End Date</b> : {{selectedFormData.endDateType === 'endDate' ? (selectedFormData.endDate | date) : 
+          (selectedFormData.endDateType === 'occurence' ? 'after' + ' ' + selectedFormData.endAfter + ' ' + 'occurence' : 
+          'ONGOING')
+        }}
+        </div>
+        <div nz-row nzGutter="16" *ngIf="!selectedFormData.day && selectedFormData.statement">
+          <b>{{selectedFormData.statement}}</b>
+        </div>
     </div>
-    <div *ngIf="title=== 'WEEKLY'">
-        <app-weekly [weeklyForm]="weeklyForm"></app-weekly>
-    </div>
-    <div *ngIf="title=== 'MONTHLY'">
-      <app-monthly [monthlyForm]="monthlyForm"></app-monthly>
+    <ul class="ul-section" *ngIf="dueDatesDisplay.length > 0; else noResultTemp">
+      <li *ngFor="let item of dueDatesDisplay"> {{item | date: 'dd MMM yyyy (EEEE)'}} </li>
+    </ul>
+    <ng-template #noResultTemp>
+      <h1 class="no-result">No due dates generated for the selected range</h1>
+    </ng-template>
   </div>
-  </nz-tab>
-</nz-tabset>
+</ng-template>
+
+<!-- ******* Weekly off and holiday list ******** -->
+<nz-modal [(nzVisible)]="isModalVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="null"
+  [nzBodyStyle]="{'max-height': '500px', 'overflow': 'auto'}" (nzOnCancel)="handleCancel()" [nzMaskClosable]="'false'">
+  <ng-template #modalTitle>
+    weekly Off and Holiday List
+  </ng-template>
+
+  <ng-template #modalContent>
+    <h2>Weekly Off</h2>
+    <ul>
+      <li *ngFor="let item of weeklyOff | keyvalue"> {{item.key}} </li>
+    </ul>
+    <span>--------------------------------------------------------------</span>
+    <h2>Holiday List</h2>
+    <ul>
+      <li *ngFor="let data of holidayList">{{ data.date | date:'dd MMM  (EEEE)' }} --- {{ data.holidayName }}</li>
+    </ul>
+  </ng-template>
+</nz-modal>

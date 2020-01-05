@@ -44,7 +44,6 @@ export class HolidaysListComponent implements OnInit {
   selectWeek(item) {
     let result = this.weekList.filter((el: any) => el.name === item.name)[0];
     result.active = !result.active;
-    console.log(result);
     if (result.active) this.service.selectedWeeklyOff[result.name] = true;
     else delete this.service.selectedWeeklyOff[result.name];
   }
@@ -63,7 +62,6 @@ export class HolidaysListComponent implements OnInit {
   }
 
   onChange(date: Date) {
-    console.log(date.getUTCDay(), getDay(date.getDay()));
     this.holidayForm.get('day').setValue(getDay(date.getDay()));
   }
 
@@ -72,7 +70,6 @@ export class HolidaysListComponent implements OnInit {
     list.push(this.holidayForm.value);
     this.service.holidaysList.next(list);
     this.isModalVisible = false;
-    console.log(this.service.holidaysList)
   }
 
   handleCancel() {

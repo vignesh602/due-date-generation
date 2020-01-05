@@ -27,3 +27,33 @@
     left: 80%;
   }
 }
+
+.ul-section {
+  padding-top: 20px;
+  font-size: 21px;
+}
+
+.calendar-section {
+  font-size: 24px;
+  padding-left: 90%;
+  cursor: pointer;
+  div {
+    border: 2px solid blue;
+    padding: 7px;
+    border-radius: 59px;
+    width: 43px;
+    height: 43px;
+    padding-top: 2px;
+  }
+}
+
+.second-page {
+.heading {
+  padding-top: 20px;
+  font-size: 17px;
+}
+  .no-result {
+    padding-top: 12%;
+    padding-left: 18%;
+  }
+}

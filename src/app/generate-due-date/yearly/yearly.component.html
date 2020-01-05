@@ -1,11 +1,13 @@
-<div nz-form [formGroup]="monthlyForm" class="form-section" [nzLayout]="'vertical'">
+<div nz-form [formGroup]="yearlyForm" class="form-section" [nzLayout]="'vertical'">
   <div class="gutter-example">
     <div nz-row nzGutter="16" class="pb-35">
       <span style="padding-right: 5px">Day</span>
       <nz-input-number formControlName="day" [nzMin]="1" [nzMax]="31" [nzStep]="1"></nz-input-number>
     </div>
     <div nz-row nzGutter="16" class="pb-35">
-      <nz-checkbox-group formControlName="month"></nz-checkbox-group>
+      <nz-radio-group formControlName="month">
+        <label nz-radio [nzValue]="o.value" *ngFor="let o of monthData">{{ o.label }}</label>
+      </nz-radio-group>
     </div>
     <div nz-row nzGutter="16">
       <nz-form-item>

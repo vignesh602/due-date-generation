@@ -17,6 +17,7 @@ import { Service } from './service/service';
 import { GenerateDueDateComponent } from './generate-due-date/generate-due-date.component';
 import { WeeklyComponent } from './generate-due-date/weekly/weekly.component';
 import { MonthlyComponent } from './generate-due-date/monthly/monthly.component';
+import { YearlyComponent } from './generate-due-date/yearly/yearly.component';
 registerLocaleData(en);
 
 @NgModule({
@@ -26,7 +27,8 @@ registerLocaleData(en);
     DashboardComponent,
     GenerateDueDateComponent,
     WeeklyComponent,
-    MonthlyComponent
+    MonthlyComponent,
+    YearlyComponent
   ],
   imports: [
     BrowserModule,

@@ -18,6 +18,13 @@ export class GenerateDueDateComponent implements OnInit {
   yearlyForm: FormGroup;
   oneTimeForm: FormGroup;
   currentDate = new Date();
+  isDisplayDates = false;
+  selectedFormData: any;
+  dueDatesDisplay = [];
+  tabIndex = 0;
+  isModalVisible = false
+  weeklyOff: any;
+  holidayList = [];
 
   constructor(
     public service: Service,
@@ -53,11 +60,23 @@ export class GenerateDueDateComponent implements OnInit {
       endDate: [null],
       endAfter: [null],
       onGoing: [null]
-    })
+    });
+    this.yearlyForm = this.fb.group({
+      month: [null],
+      day: [null],
+      startDate: [this.currentDate],
+      endDateType: [null],
+      endDate: [null],
+      endAfter: [null],
+      onGoing: [null]
+    });
+    this.oneTimeForm = this.fb.group({
+      startDate: [this.currentDate]
+    });
   }
 
   submitForm() {
-    console.log(this.dailyForm.value);
+    this.dueDatesDisplay = [];
     let formValue = _.cloneDeep(this.dailyForm.value);
     let dueDates = [];
     let startDate: Date = formValue.startDate;
@@ -74,13 +93,12 @@ export class GenerateDueDateComponent implements OnInit {
     } else {
 
     }
-    console.log(dueDates)
+    this.outputdueDates(dueDates, 'daily')
   }
 
   generateDueDates(startDate: Date, endDate: Date, holidayList) {
     let dueDates = [];
     for (let sd = startDate; sd <= endDate; sd.setDate(sd.getDate() + 1)) {
-      console.log((holidayList.findIndex((value) => value.date.getDate() !== sd.getDate() && value.date.getMonth() !== sd.getMonth())))
       if (!this.service.selectedWeeklyOff[getDay(sd.getDay())] &&
         (holidayList.findIndex((value) => value.date.getDate() === sd.getDate() && value.date.getMonth() === sd.getMonth())) < 0) {
         dueDates.push(new Date(sd));
@@ -94,7 +112,6 @@ export class GenerateDueDateComponent implements OnInit {
     let sd = startDate;
     let dueDates = [];
     while (count <= occurence) {
-      console.log(count, occurence)
       if (!this.service.selectedWeeklyOff[getDay(sd.getDay())] &&
         (holidayList.findIndex((value) => value.date.getDate() === sd.getDate() && value.date.getMonth() === sd.getMonth())) < 0) {
         count++;
@@ -103,5 +120,74 @@ export class GenerateDueDateComponent implements OnInit {
       sd.setDate(sd.getDate() + 1);
     }
     return dueDates;
+  }
+
+  submitOneTimeForm() {
+    let formValue = this.oneTimeForm.value
+    let dueDates = [];
+    dueDates.push(formValue.startDate);
+    this.outputdueDates(dueDates, 'oneTime');
+  }
+
+  goBack() {
+    this.isDisplayDates = false;
+  }
+
+  outputdueDates(data, type?) {
+    console.log(data);
+    switch (type) {
+      case 'daily':
+        this.selectedFormData = this.dailyForm.value;
+        this.selectedFormData.frequency = 'DAILY'
+        break;
+      case 'weekly':
+        this.selectedFormData = _.cloneDeep(this.weeklyForm.value);
+        this.selectedFormData.frequency = 'WEEKLY';
+        console.log(this.selectedFormData)
+        this.selectedFormData.statement = `Every `
+        this.selectedFormData.week.forEach((el: any) => {
+          if(el.checked) {
+            this.selectedFormData.statement = this.selectedFormData.statement + el.value + ' ';
+          }
+        })
+        break;
+      case 'monthly':
+        this.selectedFormData = this.monthlyForm.value;
+        this.selectedFormData.frequency = 'MONTHLY'
+        this.selectedFormData.statement = `${this.selectedFormData.day} of `
+        this.selectedFormData.month.forEach((el: any) => {
+          if(el.checked) {
+            this.selectedFormData.statement = this.selectedFormData.statement + el.value + ' ';
+          }
+        })
+        break;
+      case 'yearly':
+        this.selectedFormData = this.yearlyForm.value;
+        this.selectedFormData.frequency = 'YEARLY'
+        this.selectedFormData.statement = `${this.selectedFormData.day} of ${this.selectedFormData.month}`;
+        break;
+      case 'oneTime':
+        this.selectedFormData = this.oneTimeForm.value;
+        this.selectedFormData.frequency = 'ONE TIME'
+        break;
+    }
+    this.dueDatesDisplay = data;
+    this.isDisplayDates = true;
+  }
+
+  tabChange(tabInfo) {
+    console.log(tabInfo);
+    this.tabIndex = tabInfo.index;
+    console.log(this.tabIndex)
+  }
+
+  openHolidaysModal() {
+    this.weeklyOff = this.service.selectedWeeklyOff;
+    this.service.holidaysList.subscribe((res) => this.holidayList = res).unsubscribe();
+    this.isModalVisible = true;
+  }
+
+  handleCancel() {
+    this.isModalVisible = false;
   }
 }
